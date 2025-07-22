@@ -18,10 +18,10 @@ app.use(cors());
 app.use(express.json());
 
 /* Routes */
-app.use('/user', user_routes);
-app.use('/booking', booking_routes);
-app.use('/housekeeping', houseKeeping_routes);
-app.use('/rooms', rooms_routes);
+app.use('/user', user_routes); // Debugging 50% done, checking needed
+app.use('/booking', booking_routes);  // Debugging 50% done, checking needed
+app.use('/housekeeping', houseKeeping_routes); // Debugging 50% done, checking needed
+app.use('/rooms', rooms_routes); 
 app.use('/payment', payment_routes);
 
 
