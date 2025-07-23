@@ -21,7 +21,7 @@ app.use(express.json());
 app.use('/user', user_routes); // Debugging 50% done, checking needed
 app.use('/booking', booking_routes);  // Debugging 50% done, checking needed
 app.use('/housekeeping', houseKeeping_routes); // Debugging 50% done, checking needed
-app.use('/rooms', rooms_routes); 
+app.use('/rooms', rooms_routes); // Debugging 50% done, checking needed
 app.use('/payment', payment_routes);
 
 
