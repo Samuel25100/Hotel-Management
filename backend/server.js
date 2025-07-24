@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 /* Routes */
-app.use('/user', user_routes); // Debugging 50% done, checking needed
+app.use('/user', user_routes); // Debugging 100% done, checking done
 app.use('/booking', booking_routes);  // Debugging 50% done, checking needed
 app.use('/housekeeping', houseKeeping_routes); // Debugging 50% done, checking needed
 app.use('/rooms', rooms_routes); // Debugging 50% done, checking needed

@@ -1,4 +1,6 @@
 const Room = require("../models/rooms");
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 class RoomController {
     static async create(req, res) {

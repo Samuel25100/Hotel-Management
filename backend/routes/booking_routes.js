@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const jwt_auth = require("../middleware/jwt_auth");
-const BookingController = require("../controllers/booking.controller");
+const BookingController = require("../controller/booking_cont");
 
 router.post("/", jwt_auth, BookingController.create);
 router.get("/", jwt_auth, BookingController.getAll);

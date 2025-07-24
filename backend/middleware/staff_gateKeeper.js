@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../models/users');
 const {ObjectId} = require("mongoose").Types;
 
 async function checkStaff(req, res, next) {

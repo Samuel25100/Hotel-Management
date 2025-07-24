@@ -1,14 +1,14 @@
 const Booking = require("../models/booking");
-const Users = require("../models/users_db");
+const Users = require("../models/users");
 const { ObjectId } = require("mongodb");
-const Rooms = require("../models/rooms_db");
+const Rooms = require("../models/rooms");
 
 
 class BookingController {
   // Create a new booking
   static async create(req, res) {
     try {
-      const userId = req.userId;
+      const userId = new ObjectId(req.userId);
       const userdb = await Users.findById(userId);
       if (!userdb) {
         return res.status(404).json({ error: "User not found" });
@@ -17,7 +17,7 @@ class BookingController {
       if (!userId || !room || !checkIn || !checkOut || !guests) {
         return res.status(400).json({ error: "All fields are required" });
       }
-      const booking = await Booking.create({ user: ObjectId(userId), room, checkIn, checkOut, guests });
+      const booking = await Booking.create({ user: userId, room, checkIn, checkOut, guests });
       res.status(201).json({ message: "Booking created", booking });
     } catch (err) {
       res.status(400).json({ error: err.message });
@@ -27,10 +27,10 @@ class BookingController {
   // Get all bookings
   static async getAll(req, res) {
     try {
-        const userId = req.userId;
+        const userId = new ObjectId(req.userId);
         const userdb = await Users.findById(userId);
         if (userdb.role !== "admin") {
-          const bookings = await Booking.find({ user: ObjectId(userId) })
+          const bookings = await Booking.find({ user: userId })
             .populate("user")
             .populate("room");
           if (!bookings || bookings.length === 0) {
@@ -55,16 +55,16 @@ class BookingController {
   // Get booking by ID
   static async getById(req, res) {
     try {
-      const userId = req.userId;
+      const userId = new ObjectId(req.userId);
       const userdb = await Users.findById(userId);
       if (userdb.role !== "admin") {
-        const booking = await Booking.find({user: ObjectId(userId), _id: ObjectId(req.params.id)})
+        const booking = await Booking.find({user: userId, _id: new ObjectId(req.params.id)})
         .populate("user")
         .populate("room");
         if (!booking) return res.status(404).json({ message: "Booking not found" });
         return res.status(200).json(booking);
       } else if (userdb.role === "admin") {
-          const booking = await Booking.findById(req.params.id)
+          const booking = await Booking.findById(new ObjectId(req.params.id))
             .populate("user")
             .populate("room");
           if (!booking) return res.status(404).json({ message: "Booking not found" });
@@ -78,11 +78,11 @@ class BookingController {
   // Update booking by ID
   static async update(req, res) {
     try {
-      const userId = req.userId;
-      const userdb = await Users.findById(ObjectId(userId));
-      const booking = await Booking.findById(req.params.id);
+      const userId = new ObjectId(req.userId);
+      const userdb = await Users.findById(userId);
+      const booking = await Booking.findById(new ObjectId(req.params.id));
       if (userId === booking.user.toString()) {
-        const updated = await Booking.findOneAndUpdate({ _id: ObjectId(req.params.id), user: ObjectId(userId) }, req.body,
+        const updated = await Booking.findOneAndUpdate({ _id: new ObjectId(req.params.id), user: userId }, req.body,
         {
           new: true,
           runValidators: true,
@@ -90,7 +90,7 @@ class BookingController {
         if (!updated) return res.status(404).json({ message: "Booking not found" });
         return res.status(200).json({ message: "Booking updated", updated });  
       } else if (userdb.role === "admin") {
-        const updated = await Booking.findByIdAndUpdate(req.params.id, req.body, {
+        const updated = await Booking.findByIdAndUpdate(new ObjectId(req.params.id), req.body, {
           new: true,
           runValidators: true,
         });
@@ -105,20 +105,20 @@ class BookingController {
   // Delete booking
   static async delete(req, res) {
     try {
-      const userId = req.userId;
+      const userId = new ObjectId(req.userId);
       const userdb = await Users.findById(userId);
       if (userdb.role === "admin") {
-          const booking = await Booking.findById(req.params.id);
+          const booking = await Booking.findById(new ObjectId(req.params.id));
           if (!booking) return res.status(404).json({ message: "Booking not found" });
-          const deleted = await Booking.findByIdAndDelete(req.params.id);
+          const deleted = await Booking.findByIdAndDelete(new ObjectId(req.params.id));
           if (!deleted) return res.status(404).json({ message: "Booking not deleted" });
           return res.status(200).json({ message: "Booking deleted" });
       } else if (userdb.role !== "admin") {
-          const booking = await Booking.find({user: ObjectId(userId), _id: ObjectId(req.params.id)});
+          const booking = await Booking.find({user: userId, _id: new ObjectId(req.params.id)});
           if (!booking || booking.length === 0) {
             return res.status(403).json({ message: "Unauthorized" });
           }
-          const deleted = await Booking.findByIdAndDelete(req.params.id);
+          const deleted = await Booking.findByIdAndDelete(new ObjectId(req.params.id));
           if (!deleted) return res.status(404).json({ message: "Booking not deleted" });
           return res.status(200).json({ message: "Booking deleted" });
       }

@@ -1,9 +1,13 @@
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
 function jwt_auth(req, res, next) {
-    const authtoken = req.headers["authorization"].toString();
+    let authtoken = req.headers["authorization"] || null;
+    if (!authtoken) {
+        res.status(401).json({"message": "Token missing"});
+        return;
+    }
+    authtoken = authtoken.toString();
     const token = authtoken && authtoken.split(' ')[1];
-
     if (!token){
         res.status(401).json({"message": "Token missing"});
         return;
