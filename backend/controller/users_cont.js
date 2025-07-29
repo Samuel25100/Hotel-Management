@@ -72,7 +72,6 @@ class Users_cont {
         if (user) {
             const userId = user._id.toString();
             const match = await bcrypt.compare(pwd, user.pwd);
-            console.log("bcrypt match: ", match, pwd, user.pwd);
             if (match) {
                 const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN, { expiresIn: '1d'});
                 const refreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN, { expiresIn: '7d'});
@@ -106,6 +105,24 @@ class Users_cont {
         if (!users) return res.status(404).json({ message: "No users found" });
 
         res.status(200).json({ users });
+    }
+
+    static async refreshToken(req, res) {
+        try {
+            const refreshToken = req.body.token;
+            if (!refreshToken) return res.status(401).json({ message: "Refresh token is required" });
+            jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, decoded) => {
+                if (err) return res.status(403).json({ message: "Invalid refresh token, login again" });
+                const userId = decoded.userId;
+                const user = Users.findById(new ObjectId(userId));
+                if (!user) return res.status(404).json({ message: "User not found" });
+                // Generate new access token and refresh token
+                const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN, { expiresIn: '1d' });
+                return res.status(200).json({ accessToken });
+            });
+        } catch (error) {
+            return res.status(500).json({ message: "Internal Server Error" });
+        }
     }
 }
 

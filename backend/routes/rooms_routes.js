@@ -6,8 +6,8 @@ const checkStaff = require("../middleware/staff_gateKeeper");
 
 router.post("/", jwt_auth, checkStaff, RoomController.create);
 router.get("/",  jwt_auth, RoomController.getAll);
-router.get("/:id", jwt_auth, RoomController.getById);
-router.put("/:id", jwt_auth, checkStaff, RoomController.update);
-router.delete("/:id", jwt_auth, checkStaff, RoomController.delete);
+router.get("/:number", jwt_auth, RoomController.getByNumber);
+router.put("/:number", jwt_auth, checkStaff, RoomController.update);
+router.delete("/:number", jwt_auth, checkStaff, RoomController.delete);
 
 module.exports = router;
