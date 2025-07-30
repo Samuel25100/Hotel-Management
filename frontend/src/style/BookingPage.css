@@ -267,7 +267,7 @@
 
 .form-group input:required:invalid,
 .form-group select:required:invalid {
-  border-color: #ef4444;
+  border-color: hsl(0, 0%, 26%);
 }
 
 /* Right Box - Booking Information */

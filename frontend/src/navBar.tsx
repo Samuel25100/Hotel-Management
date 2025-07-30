@@ -17,12 +17,12 @@ function Navbar() {
         <div className="nav-container">
           <div className="nav-content">
             {/* Logo and Brand */}
-            <div className="logo-section">
+            <div className="logo-section" style={{ cursor: "pointer" }} onClick={goToHomePage}>
               <div className="logo-container">
                 <div className="logo-icon">
                   <span className="logo-text">H</span>
                 </div>
-                <span className="brand-name">LuxuryStay</span>
+                <span className="brand-name">Vil Hotel</span>
               </div>
             </div>
 

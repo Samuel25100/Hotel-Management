@@ -1,9 +1,15 @@
 import React from 'react';
 import './style/HotelBooking.css';
 import Navbar from './navBar';
+import { useNavigate } from 'react-router-dom';
 
 
 const HotelBookingPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const goToBookingPage = () => {
+    navigate('/book');
+  };
 
   return (
     <div className="app-container">
@@ -17,7 +23,7 @@ const HotelBookingPage: React.FC = () => {
           <div className="hero-container">
             <div className="hero-text-container">
               <h1 className="hero-title">We serve experience</h1>
-              <button className="book-now-btn">Book Now</button>
+              <button className="book-now-btn" onClick={goToBookingPage}>Book Now</button>
             </div>
           </div>
         </div>
