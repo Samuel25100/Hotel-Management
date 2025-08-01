@@ -1,7 +1,7 @@
 import './style/App.css';
-import Sidebar from './Sidebar';
+import Sidebar from './SideBar';
 import TopBar from './TopBar';
-import Dashboard from './Dashboard';
+import { Outlet } from 'react-router-dom';
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
       <Sidebar />
       <div className="main-content">
         <TopBar />
-        <Dashboard />
+        <Outlet />
       </div>
     </div>
   );

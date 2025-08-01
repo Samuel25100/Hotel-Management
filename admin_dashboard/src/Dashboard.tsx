@@ -72,6 +72,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="dashboard">
+      <h1 className="dashboard-title">Main Dashboard Over-view</h1>
       {/* Filter Section */}
       <div className="filter-section">
         <div className="filter-group">

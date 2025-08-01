@@ -3,9 +3,6 @@ import "./style/TopBar.css";
 function TopBar() {
     return (
         <div className="top-bar">
-            <div className="page_nm">
-                <h2>Main Dashboard</h2>
-            </div>
             <div className="left_menu">
                 <div className="info_icons">
                     <img src="/src/assets/notification.png" alt="Notifications" />
