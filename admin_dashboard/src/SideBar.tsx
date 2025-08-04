@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import './style/Sidebar.css';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const Sidebar: React.FC = () => {
+  const navigate = useNavigate();
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isRoomOpen, setIsRoomOpen] = useState(false);
   const [isStaffOpen, setIsStaffOpen] = useState(false);
@@ -24,7 +26,7 @@ const Sidebar: React.FC = () => {
   return (
     <div className="sidebar">
       {/* Header Section */}
-      <div className="sidebar-header">
+      <div className="sidebar-header" onClick={() => navigate('/')}>
         <div className="logo-section">
           <div className="hotel-logo"><img src="/src/assets/h_large.png" alt="Hotel Logo" /></div>
           <h2 className="hotel-name">Vil Hotel</h2>
@@ -54,12 +56,6 @@ const Sidebar: React.FC = () => {
                     <Link to="/add-booking">Add booking</Link>
                   </li>
                   <li className="submenu-item">
-                    <Link to="/edit-booking">Edit booking</Link>
-                  </li>
-                  <li className="submenu-item">
-                    <Link to="/view-bookings">View Bookings</Link>
-                  </li>
-                  <li className="submenu-item">
                     <Link to="/booking-requests">Booking Requests</Link>
                   </li>
                 </ul>
@@ -69,7 +65,7 @@ const Sidebar: React.FC = () => {
               Registration
             </li>
             <li className="menu-item">
-              Check-in/out
+              <Link to="/check-in-out">Check-in/out</Link>
             </li>
             <li className="menu-item" >
               <div className="menu-item-main" onClick={toggleRoomDropdown}>
@@ -84,16 +80,13 @@ const Sidebar: React.FC = () => {
                       <Link to="/add-room">Add Room</Link>
                     </li>
                     <li className="submenu-item">
-                      <Link to="/edit-room">Edit Room</Link>
-                    </li>
-                    <li className="submenu-item">
                       <Link to="/view-rooms">View Rooms</Link>
                     </li>
                   </ul>
                 )}
             </li>
             <li className="menu-item" >
-              Guests
+              <Link to="/guest-management">Guests</Link>
             </li>
             <li className="menu-item" >
                 <div className="menu-item-main" onClick={toggleStaffDropdown}>
@@ -106,9 +99,6 @@ const Sidebar: React.FC = () => {
                 <ul className="submenu">
                   <li className="submenu-item">
                     <Link to="/add-staff">Add Staff</Link>
-                  </li>
-                  <li className="submenu-item">
-                    <Link to="/edit-staff">Edit Staff</Link>
                   </li>
                   <li className="submenu-item">
                     <Link to="/view-staff">View Staff</Link>

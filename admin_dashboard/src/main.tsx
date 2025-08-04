@@ -6,7 +6,16 @@ import App from './App.tsx';
 import Dashboard from './Dashboard';
 import BookingRequestPage from './BookingReq';
 import AddBooking from './AddBooking.tsx';
+import ViewRoom from './ViewRoom.tsx';
+import AddRoom from './AddRoom.tsx';
+import CheckInCheckOut from './CheckIn_Out.tsx';
+import GuestManagement from './GuestMgt.tsx';
+import ViewStaff from './ViewStaff.tsx';
 
+// Ensure the root element exists before rendering
+if (!document.getElementById('root')) {
+  throw new Error('Root element not found');
+}
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
@@ -15,6 +24,11 @@ createRoot(document.getElementById('root')!).render(
           <Route index element={<Dashboard />} />
           <Route path="booking-requests" element={<BookingRequestPage />} />
           <Route path="add-booking" element={<AddBooking />} />
+          <Route path="view-rooms" element={<ViewRoom />} />
+          <Route path="add-room" element={<AddRoom />} />
+          <Route path="check-in-out" element={<CheckInCheckOut />} />
+          <Route path="guest-management" element={<GuestManagement />} />
+          <Route path="view-staff" element={<ViewStaff />} />
         </Route>
       </Routes>
     </BrowserRouter>

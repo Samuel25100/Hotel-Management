@@ -235,6 +235,13 @@ const BookingRequestPage: React.FC = () => {
                         >
                           Cancel
                         </button>
+                        <button
+                          className="approve-btn"
+                          onClick={() => handleStatusChange(request.id, 'approved')}
+                          disabled={request.status === 'approved'}
+                        >
+                          Edit
+                        </button>
                       </div>
                     </div>
                   </div>
