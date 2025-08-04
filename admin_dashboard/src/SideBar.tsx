@@ -133,7 +133,7 @@ const Sidebar: React.FC = () => {
           <h3 className="section-title">System</h3>
           <ul className="menu-list">
             <li className="menu-item logout">
-              Logout
+              <Link to="/login">Logout</Link>
             </li>
           </ul>
         </div>

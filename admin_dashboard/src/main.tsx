@@ -11,6 +11,8 @@ import AddRoom from './AddRoom.tsx';
 import CheckInCheckOut from './CheckIn_Out.tsx';
 import GuestManagement from './GuestMgt.tsx';
 import ViewStaff from './ViewStaff.tsx';
+import AddStaff from './AddStaff.tsx';
+import LoginPage from './LoginPage.tsx';
 
 // Ensure the root element exists before rendering
 if (!document.getElementById('root')) {
@@ -29,7 +31,9 @@ createRoot(document.getElementById('root')!).render(
           <Route path="check-in-out" element={<CheckInCheckOut />} />
           <Route path="guest-management" element={<GuestManagement />} />
           <Route path="view-staff" element={<ViewStaff />} />
+          <Route path="add-staff" element={<AddStaff />} />
         </Route>
+        <Route path="login" element={<LoginPage />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
