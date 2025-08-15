@@ -1,4 +1,4 @@
-import "./style/TopBar.css";
+import "/src/style/TopBar.css";
 
 function TopBar() {
     return (

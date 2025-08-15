@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-import './style/Dashboard.css';
+import React, { useState, useEffect } from 'react';
+import '/src/style/Dashboard.css';
+import api from '../api/api.tsx';
+import ReloadBtn from '../components/ReloadBtn.tsx';
+
 
 interface DashboardData {
   id: number;
@@ -11,14 +14,38 @@ interface DashboardData {
 }
 
 const Dashboard: React.FC = () => {
+  const [refresh, setRefresh] = useState(false);
+  const [dashboardDataAPI, setDashboardDataAPI] = useState<DashboardData[] | null>(null);
+  // Fetch initial data when component mounts
+  useEffect(() => {
+    // Fetch initial dashboard data if needed
+    try {
+      api.get('/admin/dashboard', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          'Content-Type': 'application/json'
+        }
+      }).then(response => {
+          console.log(response.data);
+          setDashboardDataAPI(response.data);
+        }
+      );
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+    }
+  }, [refresh]);
   const [filters, setFilters] = useState({
     timePeriod: 'All Time',
     category: 'All Categories',
     status: 'All Status'
   });
 
+  const handleRefresh: () => void = () => {
+    setRefresh(prev => !prev);
+  };
+
   // Sample dashboard data
-  const dashboardData: DashboardData[] = [
+  const dashboardData: DashboardData[] = dashboardDataAPI || [
     { id: 1, title: 'Total Bookings', value: 245, category: 'booking', status: 'active', description: 'This month' },
     { id: 2, title: 'Pending Bookings', value: 28, category: 'booking', status: 'pending', description: 'Awaiting confirmation' },
     { id: 3, title: 'New Registrations', value: 67, category: 'registration', status: 'completed', description: 'This week' },
@@ -31,7 +58,7 @@ const Dashboard: React.FC = () => {
     { id: 10, title: 'Monthly Costs', value: '$12,800', category: 'bill', status: 'active', description: 'Operating expenses' },
     { id: 11, title: 'Average Revenue', value: '$1,507', category: 'revenue', status: 'active', description: 'Per day' },
     { id: 12, title: 'Occupancy Rate', value: '78%', category: 'booking', status: 'active', description: 'Current rate' }
-  ];
+  ] ;
 
   const getHighlightColor = (category: string): string => {
     switch (category) {
@@ -72,7 +99,8 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="dashboard">
-      <h1 className="dashboard-title">Main Dashboard Over-view</h1>
+      <ReloadBtn handleRefresh={handleRefresh} output="Main Dashboard Over-view" />
+      
       {/* Filter Section */}
       <div className="filter-section">
         <div className="filter-group">

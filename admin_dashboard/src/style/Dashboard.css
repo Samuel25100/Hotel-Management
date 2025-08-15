@@ -2,12 +2,19 @@
 .dashboard {
   padding: 20px;
   padding-top: 40px;
-  background-color: #f8fafc;
   min-height: 100vh;
   margin-left: 25px;
   margin-right: 25px;
 }
-/*Dashboard title*/
+/*Dashboard title
+.dashboard-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
 .dashboard-title {
   text-align: center;
     font-size: 32px;
@@ -15,7 +22,14 @@
     color: #1f2937;
     margin-bottom: 40px;
 }
-
+.reload {
+  margin-bottom: 30px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+*/
 
 /* Filter Section */
 .filter-section {

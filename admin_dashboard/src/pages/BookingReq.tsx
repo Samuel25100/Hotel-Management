@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import './style/BookingReq.css';
+import React, { useEffect, useState } from 'react';
+import '/src/style/BookingReq.css';
+import ReloadBtn from '../components/ReloadBtn';
+import api from '../api/api';
 
 interface BookingRequest {
   id: string;
@@ -16,7 +18,9 @@ interface BookingRequest {
 
 const BookingRequestPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [bookingRequests, setBookingRequests] = useState<BookingRequest[]>([
+  const [refresh, setRefresh] = useState(false);
+  const [bookingRequests, setBookingRequests] = useState<BookingRequest[]>([]);
+  const defaultData: BookingRequest[] = [
     {
       id: '1',
       guestName: 'John Smith',
@@ -77,7 +81,44 @@ const BookingRequestPage: React.FC = () => {
       status: 'approved',
       bookingDate: '2025-07-22'
     }
-  ]);
+  ];
+  useEffect(() => {
+    // Fetch booking requests from API or perform any setup
+    try {
+      console.log('Fetching booking requests...');
+      api.get('/admin/bookings', {
+        "headers": {
+          "Authorization": "Bearer " + localStorage.getItem("accessToken"),
+          "Content-Type": "application/json"
+        }
+      }).then(response => {
+        console.log('API response:', response);
+        if (response.status === 200) {
+          console.log('Booking requests fetched successfully:', response.data);
+          const listOfBooking = response.data || [];
+          let bookingList: BookingRequest[] = [];
+          for (let i = 0; i < listOfBooking.length; i++) {
+            let book: BookingRequest = {
+              id: (i + 1).toString(),
+              guestName: listOfBooking[i].guestsId.name,
+              email: listOfBooking[i].guestsId.email,
+              phone: listOfBooking[i].guestsId.phone,
+              checkIn: String(listOfBooking[i].checkIn),
+              checkOut: listOfBooking[i].checkOut,
+              guestNumber: listOfBooking[i].guests,
+              specialRequest: listOfBooking[i].specialRequests,
+              status: listOfBooking[i].status,
+              bookingDate: listOfBooking[i].createdAt
+            };
+            console.log('Booking request created:', book);
+            bookingList.push(book);
+          }
+          setBookingRequests(bookingList || defaultData);
+        }})
+    } catch(error) {
+      console.error('Error fetching booking requests:', error);
+    }
+  }, [refresh]);
 
   const handleSearch = () => {
     // Filter logic would go here
@@ -92,6 +133,9 @@ const BookingRequestPage: React.FC = () => {
     );
   };
 
+  const handleRefresh: () => void = () => {
+    setRefresh(prev => !prev);
+  };
   const calculateNights = (checkIn: string, checkOut: string): number => {
     const start = new Date(checkIn);
     const end = new Date(checkOut);
@@ -132,8 +176,8 @@ const BookingRequestPage: React.FC = () => {
       {/* Main Request Management Content */}
       <div className="request-main">
         <div className="request-container">
-          <h1 className="request-page-title">Booking Request Management</h1>
-          
+        <ReloadBtn handleRefresh={handleRefresh} output="Booking Requests Management" />
+
           {/* Search Box */}
           <div className="search-box">
             <div className="search-input-container">

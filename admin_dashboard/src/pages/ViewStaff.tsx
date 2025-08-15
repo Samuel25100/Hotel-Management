@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import './style/ViewStaff.css';
+import '/src/style/ViewStaff.css';
+import ReloadBtn from '../components/ReloadBtn';
 
 interface Staff {
   id: string;
@@ -13,6 +14,11 @@ interface Staff {
 }
 
 const StaffManagement: React.FC = () => {
+  const [refresh, setRefresh] = useState(false);
+
+  const handleRefresh = () => {
+    setRefresh(!refresh);
+  };
   // Sample staff data
   const [staff] = useState<Staff[]>([
     {
@@ -125,7 +131,7 @@ const StaffManagement: React.FC = () => {
   return (
     <div className="staff-management-container">
       <div className="staff-management-header">
-        <h1 className="page-title">Staff Management</h1>
+        <ReloadBtn handleRefresh={handleRefresh} output="Staff Management" />
         
         {/* Search and Filter Section */}
         <div className="search-filter-section">

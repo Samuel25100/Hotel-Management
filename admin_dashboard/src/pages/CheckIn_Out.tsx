@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './style/CheckIn_Out.css';
+import '/src/style/CheckIn_Out.css';
 
 interface TimeSettings {
   checkIn: {

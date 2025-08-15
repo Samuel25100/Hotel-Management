@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './style/Sidebar.css';
+import '/src/style/Sidebar.css';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,14 +13,20 @@ const Sidebar: React.FC = () => {
 
   const toggleStaffDropdown = () => {
     setIsStaffOpen(!isStaffOpen);
+    setIsBookingOpen(false);
+    setIsRoomOpen(false);
   }
 
   const toggleBookingDropdown = () => {
     setIsBookingOpen(!isBookingOpen);
+    setIsStaffOpen(false);
+    setIsRoomOpen(false);
   };
 
   const toggleRoomDropdown = () => {
     setIsRoomOpen(!isRoomOpen);
+    setIsStaffOpen(false);
+    setIsBookingOpen(false);
   };
 
   return (

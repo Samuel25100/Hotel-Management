@@ -1,0 +1,89 @@
+.image-uploader {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    max-height: 160px;
+}
+
+.add-images-btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+    height: fit-content;
+}
+
+.add-images-btn:hover {
+    background: #2563eb;
+}
+
+.file-input {
+    display: none;
+}
+
+.images-preview {
+    flex: 1;
+    max-height: 160px;
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+    padding: 12px;
+    overflow-y: auto;
+    background: #f9fafb;
+}
+
+.images-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.image-item {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #e5e7eb;
+}
+
+.image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 18px;
+    height: 18px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.image-item:hover .remove-btn {
+    opacity: 1;
+}
+
+.empty-state {
+    color: #6b7280;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}

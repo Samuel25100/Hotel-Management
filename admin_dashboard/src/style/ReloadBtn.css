@@ -1,0 +1,27 @@
+.dashboard-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.dashboard-title {
+  text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #1f2937;
+    margin-bottom: 40px;
+}
+.reload {
+  margin-bottom: 30px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.reload:active {
+  transform: rotate(360deg);
+  transition: transform 1s linear;
+}

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import './style/GuestMgt.css';
+import '/src/style/GuestMgt.css';
+import ReloadBtn from '../components/ReloadBtn';
 
 interface Guest {
   id: string;
@@ -86,6 +87,7 @@ const GuestManagement: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [guestTypeFilter, setGuestTypeFilter] = useState<string>('all');
   const [paymentFilter, setPaymentFilter] = useState<string>('all');
+  const [refresh, setRefresh] = useState<boolean>(false);
 
   // Filter and search guests
   const filteredGuests = useMemo(() => {
@@ -131,11 +133,14 @@ const GuestManagement: React.FC = () => {
       default: return '';
     }
   };
+  const handleRefresh = () => {
+    setRefresh(prev => !prev);
+  };
 
   return (
     <div className="guest-management-container">
       <div className="guest-management-header">
-        <h1 className="page-title">Guest Management</h1>
+        <ReloadBtn handleRefresh={handleRefresh} output='Guest Management'/>
         
         {/* Search Bar */}
         <div className="search-section">

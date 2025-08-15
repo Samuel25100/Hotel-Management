@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import './style/AddBooking.css';
+import '/src/style/AddBooking.css';
+import api from '../api/api';
+
 
 interface BookingFormData {
   firstName: string;
@@ -10,7 +12,7 @@ interface BookingFormData {
   checkoutDate: string;
   roomType: string;
   guestNumber: string;
-  specialRequest: string;
+  specialRequests: string;
 }
 
 const AddBooking: React.FC = () => {
@@ -24,7 +26,7 @@ const AddBooking: React.FC = () => {
         checkoutDate: '',
         roomType: '',
         guestNumber: '',
-        specialRequest: ''
+        specialRequests: ''
     });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -37,15 +39,49 @@ const AddBooking: React.FC = () => {
 
     const isFormValid = () => {
         return Object.entries(formData).every(([key, value]) => {
-        if (key === 'specialRequest') return true; // Special request is optional
+        if (key === 'specialRequests') return true; // Special request is optional
         return value.trim() !== '';
         });
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (isFormValid()) {
-        alert('Booking submitted successfully!');
-        console.log('Booking data:', formData);
+          try {
+            const response = await api.post('/admin/bookings/add', {
+              ...formData
+            }, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+              }
+            });
+            if (response.status === 201) {
+              alert('Booking submitted successfully!');
+              setFormData({
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                checkinDate: '',
+                checkoutDate: '',
+                roomType: '',
+                guestNumber: '',
+                specialRequests: ''
+              });
+            } else if (response.status === 404) {
+                alert(response.data.message || 'Booking submission failed. Please try again.');
+          }
+          } catch (error: any) {
+            if (error.response) {
+              if (error.response.status === 404) {
+                alert(error.response.data.message || 'Booking submission failed. Please try again.');
+              } else {
+                alert('Failed to submit booking. Please try again later.');
+              }
+            } else {
+              console.error('Error:', error);
+              alert('Network or server error occurred.');
+            }
+          }
         } else {
         alert('Please fill in all required fields.');
         }
@@ -147,9 +183,9 @@ const AddBooking: React.FC = () => {
                       onChange={handleInputChange}
                       required
                     >
-                      <option value="">Select Room Type</option>
-                      <option value="standard">Standard Room</option>
-                      <option value="deluxe">Deluxe Room</option>
+                      <option value="">Select Room Type</option> 
+                      <option value="single">Single Room</option>
+                      <option value="double">Double Room</option>
                       <option value="suite">Suite</option>
                       <option value="presidential">Presidential Suite</option>
                     </select>
@@ -174,11 +210,11 @@ const AddBooking: React.FC = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="specialRequest">Special Requests</label>
+                  <label htmlFor="specialRequests">Special Requests</label>
                   <textarea
-                    id="specialRequest"
-                    name="specialRequest"
-                    value={formData.specialRequest}
+                    id="specialRequests"
+                    name="specialRequests"
+                    value={formData.specialRequests}
                     onChange={handleInputChange}
                     rows={4}
                     placeholder="Any special requests or requirements..."

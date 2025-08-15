@@ -7,7 +7,6 @@
 
 .room-app-container {
   min-height: 100vh;
-  background-color: #f8fafc;
 }
 
 /* Navigation Bar Styles - Same as other pages */
@@ -260,7 +259,7 @@
   background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%);
 }
 
-.occupied-rooms {
+.booked-rooms {
   border-left: 4px solid #ef4444;
   background: linear-gradient(135deg, #fee2e2 0%, #fef2f2 100%);
 }
@@ -397,7 +396,7 @@
   border: 1px solid #22c55e;
 }
 
-.status-occupied {
+.status-booked {
   background-color: #fee2e2;
   color: #dc2626;
   border: 1px solid #ef4444;

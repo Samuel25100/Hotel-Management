@@ -1,6 +1,6 @@
 import './style/App.css';
-import Sidebar from './SideBar';
-import TopBar from './TopBar';
+import Sidebar from './pages/SideBar';
+import TopBar from './pages/TopBar';
 import { Outlet } from 'react-router-dom';
 
 function App() {

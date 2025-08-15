@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './style/AddStaff.css';
+import '/src/style/AddStaff.css';
 
 interface StaffFormData {
   profilePic: File | null;

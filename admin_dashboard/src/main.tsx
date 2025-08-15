@@ -3,16 +3,16 @@ import { createRoot } from 'react-dom/client'
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import './style/index.css';
 import App from './App.tsx';
-import Dashboard from './Dashboard';
-import BookingRequestPage from './BookingReq';
-import AddBooking from './AddBooking.tsx';
-import ViewRoom from './ViewRoom.tsx';
-import AddRoom from './AddRoom.tsx';
-import CheckInCheckOut from './CheckIn_Out.tsx';
-import GuestManagement from './GuestMgt.tsx';
-import ViewStaff from './ViewStaff.tsx';
-import AddStaff from './AddStaff.tsx';
-import LoginPage from './LoginPage.tsx';
+import Dashboard from './pages/Dashboard.tsx';
+import BookingRequestPage from './pages/BookingReq.tsx';
+import AddBooking from './pages/AddBooking.tsx';
+import ViewRoom from './pages/ViewRoom.tsx';
+import AddRoom from './pages/AddRoom.tsx';
+import CheckInCheckOut from './pages/CheckIn_Out.tsx';
+import GuestManagement from './pages/GuestMgt.tsx';
+import ViewStaff from './pages/ViewStaff.tsx';
+import AddStaff from './pages/AddStaff.tsx';
+import LoginPage from './pages/LoginPage.tsx';
 
 // Ensure the root element exists before rendering
 if (!document.getElementById('root')) {

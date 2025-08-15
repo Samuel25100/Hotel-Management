@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import './style/LoginPage.css';
+import '/src/style/LoginPage.css';
 import { useNavigate } from 'react-router-dom';
+import api from '../api/api.tsx';
 
 interface LoginFormData {
   email: string;
@@ -10,8 +11,8 @@ interface LoginFormData {
 
 const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState<LoginFormData>({
-    email: 'hysami@gmail.com',
-    password: '123456',
+    email: 'samuel.b@example.com',
+    password: 'password27',
     rememberMe: false
   });
 
@@ -55,23 +56,23 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    //
     
-    if (!validateForm()) return;
-
+    if (!validateForm()) {
+      return; 
+    }
     setIsLoading(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await api.post('admin/login', {
+        email: formData.email,
+        pwd: formData.password
+      });
       
-      // Handle successful login
-      console.log('Login successful:', formData);
-      alert('Login successful! Redirecting to dashboard...');
+      
+      // Store token
+      window.localStorage.setItem("accessToken", response.data.accessToken);
+      window.localStorage.setItem("refreshToken", response.data.refreshToken);
       navigate('/'); // Redirect to dashboard or home page
-      // You would typically redirect here
-      //window.location.href = '/';
-      
     } catch (error) {
       console.error('Login failed:', error);
       setErrors({ email: 'Invalid email or password' });

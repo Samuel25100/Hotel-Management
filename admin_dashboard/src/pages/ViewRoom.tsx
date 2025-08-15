@@ -1,47 +1,85 @@
-import React, { useState, useMemo } from 'react';
-import './style/ViewRoom.css';
+import React, { useState, useMemo, useEffect } from 'react';
+import ReloadBtn from '../components/ReloadBtn.tsx';
+import '/src/style/ViewRoom.css';
+import api from '../api/api';
 
 interface Room {
   id: string;
   roomNumber: string;
   type: string;
   floor: number;
-  status: 'Available' | 'Occupied' | 'Maintenance';
+  status: 'available' | 'booked' | 'maintenance';
   price: number;
 }
 
+interface RoomAPI {
+  id: string;
+  number: string;
+  type: string;
+  status: 'available' | 'booked' | 'maintenance';
+  price: string;
+}
+
+
 const ViewRoom: React.FC = () => {
+  const [refresh, setRefresh] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [rooms, setRooms] = useState<Room[]>([]); 
   const [filters, setFilters] = useState({
     roomType: 'All Types',
     floor: 'All Floors',
     status: 'All Status',
     maxPrice: 'Max Price'
   });
-
-  // Mock room data
-  const rooms: Room[] = [
-    { id: '101', roomNumber: '101', type: 'Standard Single', floor: 1, status: 'Available', price: 120 },
-    { id: '102', roomNumber: '102', type: 'Standard Double', floor: 1, status: 'Occupied', price: 150 },
-    { id: '103', roomNumber: '103', type: 'Deluxe Queen', floor: 1, status: 'Available', price: 200 },
-    { id: '104', roomNumber: '104', type: 'Standard Single', floor: 1, status: 'Maintenance', price: 120 },
-    { id: '201', roomNumber: '201', type: 'Executive Suite', floor: 2, status: 'Available', price: 350 },
-    { id: '202', roomNumber: '202', type: 'Deluxe King', floor: 2, status: 'Occupied', price: 240 },
-    { id: '203', roomNumber: '203', type: 'Standard Twin', floor: 2, status: 'Available', price: 140 },
-    { id: '204', roomNumber: '204', type: 'Family Room', floor: 2, status: 'Available', price: 280 },
-    { id: '301', roomNumber: '301', type: 'Presidential Suite', floor: 3, status: 'Available', price: 500 },
-    { id: '302', roomNumber: '302', type: 'Junior Suite', floor: 3, status: 'Occupied', price: 300 },
-    { id: '303', roomNumber: '303', type: 'Deluxe Queen', floor: 3, status: 'Maintenance', price: 200 },
-    { id: '304', roomNumber: '304', type: 'Standard Double', floor: 3, status: 'Available', price: 150 },
-    { id: '401', roomNumber: '401', type: 'Penthouse Suite', floor: 4, status: 'Available', price: 800 },
-    { id: '402', roomNumber: '402', type: 'Executive Suite', floor: 4, status: 'Occupied', price: 350 },
-    { id: '403', roomNumber: '403', type: 'Deluxe King', floor: 4, status: 'Available', price: 240 },
-    { id: '404', roomNumber: '404', type: 'Junior Suite', floor: 4, status: 'Maintenance', price: 300 },
-    { id: '501', roomNumber: '501', type: 'Royal Suite', floor: 5, status: 'Available', price: 600 },
-    { id: '502', roomNumber: '502', type: 'Standard Double', floor: 5, status: 'Available', price: 150 },
-    { id: '503', roomNumber: '503', type: 'Family Room', floor: 5, status: 'Occupied', price: 280 },
-    { id: '504', roomNumber: '504', type: 'Deluxe Queen', floor: 5, status: 'Available', price: 200 }
+// Mock room data
+  const roomsdefault: Room[] = [
+    { id: '101', roomNumber: '101', type: 'Standard Single', floor: 1, status: 'available', price: 120 },
+    { id: '102', roomNumber: '102', type: 'Standard Double', floor: 1, status: 'booked', price: 150 },
+    { id: '103', roomNumber: '103', type: 'Deluxe Queen', floor: 1, status: 'available', price: 200 },
+    { id: '104', roomNumber: '104', type: 'Standard Single', floor: 1, status: 'maintenance', price: 120 },
+    { id: '201', roomNumber: '201', type: 'Executive Suite', floor: 2, status: 'available', price: 350 },
+    { id: '202', roomNumber: '202', type: 'Deluxe King', floor: 2, status: 'booked', price: 240 },
+    { id: '203', roomNumber: '203', type: 'Standard Twin', floor: 2, status: 'available', price: 140 },
+    { id: '204', roomNumber: '204', type: 'Family Room', floor: 2, status: 'available', price: 280 },
+    { id: '301', roomNumber: '301', type: 'Presidential Suite', floor: 3, status: 'available', price: 500 },
+    { id: '302', roomNumber: '302', type: 'Junior Suite', floor: 3, status: 'booked', price: 300 },
+    { id: '303', roomNumber: '303', type: 'Deluxe Queen', floor: 3, status: 'maintenance', price: 200 },
+    { id: '304', roomNumber: '304', type: 'Standard Double', floor: 3, status: 'available', price: 150 },
+    { id: '401', roomNumber: '401', type: 'Penthouse Suite', floor: 4, status: 'available', price: 800 },
+    { id: '402', roomNumber: '402', type: 'Executive Suite', floor: 4, status: 'booked', price: 350 },
+    { id: '403', roomNumber: '403', type: 'Deluxe King', floor: 4, status: 'available', price: 240 },
+    { id: '404', roomNumber: '404', type: 'Junior Suite', floor: 4, status: 'maintenance', price: 300 },
+    { id: '501', roomNumber: '501', type: 'Royal Suite', floor: 5, status: 'available', price: 600 },
+    { id: '502', roomNumber: '502', type: 'Standard Double', floor: 5, status: 'available', price: 150 },
+    { id: '503', roomNumber: '503', type: 'Family Room', floor: 5, status: 'booked', price: 280 },
+    { id: '504', roomNumber: '504', type: 'Deluxe Queen', floor: 5, status: 'available', price: 200 }
   ];
+
+
+  useEffect(() => {
+    try {
+      api.get('/rooms', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` }
+      }).then(response => {
+        if (response.status === 200) {
+          const roomsData: RoomAPI[] = response.data.rooms;
+          const formattedRooms: Room[] = roomsData.map((room) => ({
+            id: room.number,
+            roomNumber: room.number,
+            type: room.type,
+            floor: parseInt(room.number[0]),
+            status: room.status,
+            price: parseFloat(room.price)
+          }));
+          setRooms(formattedRooms || roomsdefault);
+        } else {
+          setRooms(roomsdefault);
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching rooms:', error);
+    }
+  }, [refresh]);
 
   const handleSearch = () => {
     console.log('Searching for:', searchTerm);
@@ -53,6 +91,10 @@ const ViewRoom: React.FC = () => {
       [filterType]: value
     }));
   };
+  const handleRefresh: () => void = () => {
+    setRefresh(prev => !prev);
+  };
+
 
   // Filter rooms based on search and filters
   const filteredRooms = useMemo(() => {
@@ -77,20 +119,20 @@ const ViewRoom: React.FC = () => {
   // Calculate statistics
   const stats = useMemo(() => {
     const total = rooms.length;
-    const available = rooms.filter(room => room.status === 'Available').length;
-    const occupied = rooms.filter(room => room.status === 'Occupied').length;
-    const maintenance = rooms.filter(room => room.status === 'Maintenance').length;
+    const available = rooms.filter(room => room.status === 'available').length;
+    const booked = rooms.filter(room => room.status === 'booked').length;
+    const maintenance = rooms.filter(room => room.status === 'maintenance').length;
     
-    return { total, available, occupied, maintenance };
+    return { total, available, booked, maintenance };
   }, [rooms]);
 
   const getStatusClass = (status: string) => {
     switch (status) {
-      case 'Available':
+      case 'available':
         return 'status-available';
-      case 'Occupied':
-        return 'status-occupied';
-      case 'Maintenance':
+      case 'booked':
+        return 'status-booked';
+      case 'maintenance':
         return 'status-maintenance';
       default:
         return '';
@@ -114,7 +156,8 @@ const ViewRoom: React.FC = () => {
       {/* Main Room Management Content */}
       <div className="room-main">
         <div className="room-container">
-          <h1 className="room-page-title">Room Management</h1>
+          <ReloadBtn handleRefresh={handleRefresh} output="Room Management" />
+          
           
           {/* Search Bar */}
           <div className="search-bar">
@@ -142,9 +185,9 @@ const ViewRoom: React.FC = () => {
               <div className="stat-title">Available</div>
               <div className="stat-number">{stats.available}</div>
             </div>
-            <div className="stat-box occupied-rooms">
-              <div className="stat-title">Occupied</div>
-              <div className="stat-number">{stats.occupied}</div>
+            <div className="stat-box booked-rooms">
+              <div className="stat-title">Booked</div>
+              <div className="stat-number">{stats.booked}</div>
             </div>
             <div className="stat-box maintenance-rooms">
               <div className="stat-title">Maintenance</div>
@@ -190,9 +233,9 @@ const ViewRoom: React.FC = () => {
                 className="filter-select"
               >
                 <option value="All Status">All Status</option>
-                <option value="Available">Available</option>
-                <option value="Occupied">Occupied</option>
-                <option value="Maintenance">Maintenance</option>
+                <option value="available">Available</option>
+                <option value="booked">Booked</option>
+                <option value="maintenance">Maintenance</option>
               </select>
             </div>
 
