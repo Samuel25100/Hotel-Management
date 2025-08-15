@@ -7,6 +7,7 @@ const booking_routes = require("./routes/booking_routes");
 const houseKeeping_routes = require("./routes/houseKeeping_routes");
 const rooms_routes = require("./routes/rooms_routes");
 const payment_routes = require("./routes/payment_routes");
+const admin_routes = require("./routes/admin_routes");
 
 
 const app = express();
@@ -23,6 +24,7 @@ app.use('/rooms', rooms_routes); // Debugging 100% done, checking done
 app.use('/booking', booking_routes);  // Debugging 100% done, checking done
 app.use('/housekeeping', houseKeeping_routes); // Debugging 50% done, checking needed
 app.use('/payment', payment_routes);
+app.use('/admin', admin_routes); // Debugging 0% done, checking done
 
 
 /* Mongoose connections */

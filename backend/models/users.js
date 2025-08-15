@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   pwd: { type: String, required: true }, // Hashed
   role: { type: String, enum: ["guest", "admin", "staff"], default: "guest" },
   createdAt: { type: Date, default: Date.now },
+  images: { type: [String], default: [] }, // URLs
 });
 
 module.exports = mongoose.model("User", userSchema);

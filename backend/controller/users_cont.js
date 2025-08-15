@@ -7,7 +7,7 @@ const { ObjectId } = require("mongoose").Types;
 class Users_cont {
     
     static async create_acc(req, res) {
-        const { name, email, pwd, role, phone} = req.body;
+        const { name, email, pwd, role, phone, images} = req.body;
         if (role == "Admin") {
             res.status(403).json({"message": "Not Authorized to create Admin account"});
             return;
@@ -30,7 +30,7 @@ class Users_cont {
             return;
         }
         const hspwd = await bcrypt.hash(pwd, 10);
-        const result = await Users.create({ name, email, pwd: hspwd, role, phone });
+        const result = await Users.create({ name, email, pwd: hspwd, role, phone, images });
         if (!result) return res.status(500).json({ "message": "Internal Server Error in creating" });
         const userId = result._id.toString();
         /* JWT token */
@@ -39,10 +39,10 @@ class Users_cont {
 
         const refreshToken = jwt.sign({ userId },
             process.env.REFRESH_TOKEN, { expiresIn: '7d'});
-        return res.status(201).json({ "message": "Success", "user": { userId, email, name }, accessToken, refreshToken });
+        return res.status(201).json({ "message": "Success", "user": { userId, email, name, images }, accessToken, refreshToken });
     }
 
-    static async create_admin(req, res) {
+    /*static async create_admin(req, res) {
         const { name, email, pwd, phone } = req.body;
         if (name == null || email == null || pwd == null) {
             res.status(400).json({"message": "Name, Email or Password is missing"});
@@ -57,14 +57,14 @@ class Users_cont {
         const result = await Users.create({ name, email, pwd: hspwd, role: "admin", phone });
         if (!result) return res.status(500).json({ "message": "Internal Server Error in creating" });
         const userId = result._id.toString();
-        /* JWT token */
+        // JWT token
         const accessToken = jwt.sign({ userId },
             process.env.ACCESS_TOKEN, { expiresIn: '1d'});
 
         const refreshToken = jwt.sign({ userId },
             process.env.REFRESH_TOKEN, { expiresIn: '7d'});
         return res.status(201).json({ "message": "Success", "user": { userId, email, name }, accessToken, refreshToken });
-    }
+    }*/
 
     static async login(req, res) {
         const { email, pwd } = req.body;
@@ -75,7 +75,7 @@ class Users_cont {
             if (match) {
                 const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN, { expiresIn: '1d'});
                 const refreshToken = jwt.sign({ userId }, process.env.REFRESH_TOKEN, { expiresIn: '7d'});
-                res.status(200).json({ accessToken, refreshToken, email: user.email, name: user.name, phone: user.phone });
+                res.status(200).json({ accessToken, refreshToken });
                 return;
             }
             res.status(401).json({ message: "Wrong email or password" });

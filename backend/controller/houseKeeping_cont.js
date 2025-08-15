@@ -4,7 +4,7 @@ const { ObjectId } = require("mongoose").Types;
 
 class HousekeepingController {
   // Create housekeeping record
-    static async create(req, res) {
+    static async create_house(req, res) {
         try {
             const { room, assignedTo, status, notes, lastCleaned} = req.body;
             const userdb = await User.findById(new ObjectId(assignedTo));

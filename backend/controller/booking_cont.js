@@ -13,24 +13,16 @@ class BookingController {
       if (!userdb) {
         return res.status(404).json({ error: "User not found" });
       }
-      const { room, checkIn, checkOut, guests} = req.body;
+      const { guestsName, specialRequests, roomType, checkIn, checkOut, guests} = req.body;
+      const room = await Rooms.findOne({type: roomType, status: "available", capacity: { $gte: guests }}).select("_id");
+      if (!room) {
+        return res.status(404).json({ message: "No available room of the specified type or capacity" });
+      } else {
+        await Rooms.findByIdAndUpdate(new ObjectId(room), { status: "booked" });
+      }
       let totalPrice = 0;
       if (!userId || !room || !checkIn || !checkOut) {
         return res.status(400).json({ error: "All fields are required" });
-      }
-      const roomdb = await Rooms.findById(new ObjectId(room));
-      if (!roomdb) return res.status(404).json({ "message": "Room not found" });
-      if (roomdb.isAvailable === false) {
-        return res.status(400).json({ "message": "Room is not available for booking" });
-      } else {
-        // Update room status to booked
-        await Rooms.findByIdAndUpdate(new ObjectId(room), { isAvailable: false });
-      }
-      // Check room's guest limit
-      if (guests) {
-        if (guests > roomdb.capacity) {
-          return res.status(400).json({ "message": "Number of guests exceeds room capacity" });
-        }
       }
 
       // Calculate total price based on room price and number of nights
@@ -38,14 +30,13 @@ class BookingController {
       const checkOutTime = new Date(checkOut);
       const service_hr = (checkOutTime - checkInTime) / (1000 * 60 * 60);
       const service = parseInt(service_hr / 24);
-      console.log("time cal:", service, service_hr);
       if (service == 0) {
           totalPrice = roomdb.price;
       } else if (service >= 1) {
           totalPrice = roomdb.price * service;
       }
       // Create booking
-      const booking = await Booking.create({ user: userId, room, checkIn, checkOut, guests, totalPrice });
+      const booking = await Booking.create({ user: userId, room, checkIn, checkOut, guests, totalPrice, specialRequests, guestsName });
       return res.status(201).json({ message: "Booking created", booking });
     } catch (err) {
       return res.status(400).json({ error: err.message });

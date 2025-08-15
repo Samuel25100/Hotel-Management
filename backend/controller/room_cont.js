@@ -9,8 +9,8 @@ class RoomController {
             if (req.user.role !== "admin") return res.status(403).json({ message: "Forbidden" });
             const { number, type, price, description, capacity, amenities, images } = req.body;
             const existingRoom = await Room.findOne({ number });
-            if (existingRoom) return res.status(400).json({ message: "Room already exists" });
-            const room = await Room.create({ number, type, price, description, capacity, amenities, images });
+            if (existingRoom) return res.status(409).json({ message: "Room already exists" });
+            const room = await Room.create({ number, type, price, description, capacity, amenities, images }).select('-__v -_id');
             if (!room) return res.status(400).json({ message: "Room creation failed" });
             return res.status(201).json({ message: "Room created successfully", room });
         } catch (err) {
@@ -21,7 +21,7 @@ class RoomController {
   // Get all rooms
     static async getAll(req, res) {
         try {
-            const rooms = await Room.find().select('-__v -description'); // Exclude __v field
+            const rooms = await Room.find().select('-__v -description'); // Exclude __v and _id fields
             return res.status(200).json({"number of room": rooms.length, rooms});
         } catch (err) {
             return res.status(500).json({ error: err.message });

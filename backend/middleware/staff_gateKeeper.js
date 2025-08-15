@@ -10,4 +10,13 @@ async function checkStaff(req, res, next) {
   next();
 }
 
-module.exports = checkStaff;
+async function Only_Admin(req, res, next) {
+  const userId = new ObjectId(req.userId);
+  const user = await User.findById(userId);
+  if (!user) return res.status(404).json({ message: "User not found" });
+  if (user.role !== "admin") return res.status(403).json({ message: "Forbidden" });
+  req.user = user; // Attach user to request for further use
+  next();
+}
+
+module.exports = { checkStaff, Only_Admin };
