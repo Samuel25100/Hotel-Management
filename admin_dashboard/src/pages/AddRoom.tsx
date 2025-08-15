@@ -60,6 +60,7 @@ const AddRoom: React.FC = () => {
       amenities: roomData.amenities.split(/[ ,]+/).map(item => item.trim()),
       images: []
     };
+    console.log("Data that is sent:", roomAPIData);
     try {
       const response = await api.post('/rooms', {
           ...roomAPIData
@@ -70,11 +71,7 @@ const AddRoom: React.FC = () => {
         }});
       if (response.status === 201) {
           alert('Room created successfully');
-      } else if (response.status === 400) {
-          console.error('Error creating room:', response.data);
-      } else if (response.status === 409) {
-          alert('Room number already exists');
-      }
+      } 
       setRoomData({
             roomType: '',
             floor: '',
@@ -84,12 +81,21 @@ const AddRoom: React.FC = () => {
             capacity: 0,
             amenities: '',
         });
-    } catch (error) {
-      console.log("Data that is sent:", roomAPIData);
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.status === 400) {
+          console.error('Error creating room:', error.response.data);
+        } else if (error.response.status === 409) {
+          alert('Room number already exists');
+        } else {
+          alert('Error creating room. Please try again.');
+        }
+          console.error('Error creating room:', error);
+      }
       console.error('Error creating room:', error);
     }
     setSelectedImages([]);
-};
+  };
 
   return (
     <div className="add-room-container">

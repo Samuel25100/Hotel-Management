@@ -10,9 +10,12 @@ class RoomController {
             const { number, type, price, description, capacity, amenities, images } = req.body;
             const existingRoom = await Room.findOne({ number });
             if (existingRoom) return res.status(409).json({ message: "Room already exists" });
-            const room = await Room.create({ number, type, price, description, capacity, amenities, images }).select('-__v -_id');
+            const room = await Room.create({ number, type, price, description, capacity, amenities, images });
             if (!room) return res.status(400).json({ message: "Room creation failed" });
-            return res.status(201).json({ message: "Room created successfully", room });
+            else {
+                const roomOut = await Room.findOne({ number: room.number }).select('-__v -_id');
+                return res.status(201).json({ message: "Room created successfully", room: roomOut });
+            }
         } catch (err) {
             return res.status(400).json({ error: err.message });
         }
